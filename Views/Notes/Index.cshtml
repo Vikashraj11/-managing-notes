@@ -1,0 +1,52 @@
+﻿@model List<Managingnotes.Models.Notes>
+
+<h2>Notes</h2>
+
+<form asp-action="Create" method="post">
+    <textarea name="Content" rows="3" cols="50" placeholder="Write your note..." required></textarea>
+    <select name="Priority">
+        <option value="">Select Priority</option>
+        <option value="Low">Low</option>
+        <option value="Medium">Medium</option>
+        <option value="High">High</option>
+    </select>
+    <button type="submit">Add Note</button>
+</form>
+
+<table>
+    <thead>
+        <tr>
+            <th>Content</th>
+            <th>Priority</th>
+            <th>Created At</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var note in Model)
+        {
+            <tr>
+                <form asp-action="Edit" method="post">
+                <td>
+                    <input type="hidden" name="Id" value="@note.Id" />
+                    <input type="text" name="Content" value="@note.Content" />
+                </td>
+                <td>
+                    <select name="Priority" value="@note.Priority">
+                        <option value="Low" selected="@((note.Priority == "Low") ? "selected" : null)">Low</option>
+                        <option value="Medium" selected="@((note.Priority == "Medium") ? "selected" : null)">Medium</option>
+                        <option value="High" selected="@((note.Priority == "High") ? "selected" : null)">High</option>
+                    </select>
+                </td>
+                <td>@note.CreatedAt.ToLocalTime().ToString("G")</td>
+                <td>
+                    <button type="submit">Save</button>
+                    <form asp-action="Delete" asp-route-id="@note.Id" method="post" style="display:inline;">
+                        <button type="submit" onclick="return confirm('Are you sure?')">Delete</button>
+                    </form>
+                </td>
+                </form>
+            </tr>
+        }
+    </tbody>
+</table>
